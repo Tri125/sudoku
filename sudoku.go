@@ -60,6 +60,17 @@ func backtracking(grid Grid, answer *Grid) bool {
 	return false
 }
 
+/*
+//Perform validation on the initial grid to verify it's validity
+func ValidateGrid(grid Grid) bool {
+	for x := 0; x < len(grid); x++ {
+		for y := 0; y < len(grid[x]); y++ {
+		}
+	}
+	return false
+}
+*/
+
 func isGridValid(grid Grid, row int, col int, num int) bool {
 	return isRowValid(grid, row, num) &&
 		isValidCol(grid, col, num) &&
