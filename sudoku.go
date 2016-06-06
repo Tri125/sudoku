@@ -4,6 +4,7 @@ package sudoku
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 //Grid representing the 9x9 game grid.
@@ -28,7 +29,30 @@ func (g Grid) Print() {
 //	if err == nil {
 //		gameGrid.Print()
 //	}
-func SolveGrid(grid Grid) (Grid, error) {
+func SolveGrid(grid Grid, ch chan Grid) (Grid, error) {
+
+	go _solveGrid(grid, ch)
+	select {
+	case solvedGrid := <-ch:
+		return solvedGrid, nil
+
+	case <-time.After(5 * time.Second):
+		return grid, errors.New("TimeOut")
+	}
+}
+
+func _solveGrid(grid Grid, ch chan Grid) {
+	var solvedGrid Grid
+	success := backtracking(grid, &solvedGrid)
+
+	if !success {
+		ch <- grid
+	} else {
+		ch <- solvedGrid
+	}
+}
+
+func _solveGrid2(grid Grid) (Grid, error) {
 	var solvedGrid Grid
 	success := backtracking(grid, &solvedGrid)
 
